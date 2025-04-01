@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gastronomia</title>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 60px; /* Spazio per l'header fisso */
+            overflow-x: hidden; /* Impedisce la barra di scorrimento orizzontale */
+        }
+        header {
+            background-color: #7E3D1C;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed; /* Mantiene l'header in alto anche durante lo scorrimento */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Assicura che l'header sia sopra gli altri elementi */
+        }
+        .store-title {
+            font-family: 'Georgia', serif;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: black;
+        }
+        header nav {
+            display: flex;
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 10px;
+            transition: background-color 0.3s; /* Transizione per l'effetto hover */
+        }
+        header nav a:hover {
+            background-color: #555; /* Scurisce il link al passaggio del mouse */
+            border-radius: 5px; /* Arrotonda gli angoli al passaggio del mouse */
+        }
+        .container, .menu {
+            padding: 20px;
+            text-align: center;
+            min-height: calc(100vh - 60px - 50px); /* Altezza minima per evitare sovrapposizioni col footer */
+        }
+        #home {
+            background: url('foto sfondo.jpg') no-repeat center center;
+            background-size: cover;
+            background-color: black;
+            display: block;
+        }
+        #home h1 {
+            color: white; /* Modificato il colore del titolo in bianco */
+        }
+        .home-logo {
+            height: 300px;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .contact {
+            margin-top: 20px;
+            font-size: 18px;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+        }
+        .contact a {
+            color: white; /* Modificato il colore dei link in bianco */
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed; /* Mantiene il footer in basso */
+            bottom: 0;
+            width: 100%;
+            height: auto; /* Altezza automatica per adattarsi al contenuto */
+            box-sizing: border-box; /* Include il padding nell'altezza totale */
+        }
+
+        footer p {
+            font-size: 0.9em; /* Ridotto la dimensione del testo nel footer su mobile se necessario */
+            margin: 5px 0; /* Aggiunto un po' di margine per spaziatura interna */
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Griglia responsiva per gli elementi del menu */
+            gap: 20px;
+            background-color: black; /* Sfondo nero per il menu */
+        }
+        .menu-item {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: black; /* Sfondo nero per gli elementi del menu */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Ombra leggera per gli elementi del menu */
+            display: flex;
+            flex-direction: column; /* Permette di disporre gli elementi verticalmente */
+        }
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover; /* Adatta l'immagine alle dimensioni del contenitore */
+        }
+        .menu-item-details {
+            background-color: #f9f9f9; /* Sfondo chiaro per il nome e il prezzo */
+            padding: 10px;
+        }
+        .menu-item h3 {
+            margin: 10px 0;
+            font-family: 'Georgia', serif;
+            color: #ff6a00; /* Colore del testo per il nome */
+        }
+        .menu-item p {
+            margin: 0;
+            color: #ff6a00; /* Colore del testo per il prezzo */
+        }
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            header nav {
+                display: none; /* Nasconde la navigazione tradizionale su schermi piccoli */
+            }
+            #mobile-nav {
+                display: block; /* Mostra il menu a tendina per dispositivi mobili */
+            }
+            .menu {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adatta la griglia su schermi piccoli */
+            }
+            .home-logo {
+                height: 200px; /* Riduce l'altezza del logo su mobile */
+            }
+             .contact {
+                font-size: 16px; /*smaller font size for contact on mobile*/
+            }
+        }
+        @media (max-width: 576px) {
+            .store-title {
+                font-size: 20px; /* Riduce il titolo del negozio su schermi molto piccoli */
+            }
+            .menu {
+                grid-template-columns: 1fr; /* Gli elementi del menu occupano un'intera colonna su schermi molto piccoli */
+                gap: 10px;
+            }
+            .menu-item {
+                padding: 10px;
+            }
+            .menu-item img {
+                height: 150px; /* Riduce l'altezza delle immagini del menu su schermi molto piccoli */
+            }
+            .menu-item h3 {
+                font-size: 1em; /* Riduce la dimensione del titolo degli elementi del menu */
+            }
+            .menu-item p {
+                font-size: 0.9em; /* Riduce la dimensione del prezzo degli elementi del menu */
+            }
+             footer p{
+                font-size: 0.8em;
+            }
+        }
+        /* Hide all sections except home initially */
+        .container, .menu {
+            display: none;
+        }
+        /* Menu a tendina per dispositivi mobili */
+        #mobile-nav {
+            display: none;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #mobile-nav select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        /* Modifiche per le immagini su schermi più grandi */
+        @media (min-width: 769px) {
+            .menu-item img {
+                height: 400px;
+                width: 60%;
+                margin: 0 auto;
+            }
+             .menu {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+    </style>
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.container, .menu').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+            document.body.style.overflow = 'auto';
+            window.scrollTo(0, 0);
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="store-title">STORE DEL GUSTO</div>
+        <select id="mobile-menu" onchange="navigateMobile()">
+            <option value="home">Home</option>
+            <option value="antipasti/contorni">Antipasti/Contorni</option>
+            <option value="primi">Primi Piatti</option>
+            <option value="secondi">Secondi Piatti</option>
+            <option value="focaccerie">Focaccerie</option>
+            <option value="dolci">Dolci</option>
+            
+        </select>
+        <nav>
+            <a onclick="showSection('home')">Home</a>
+            <a onclick="showSection('antipasti/contorni')">Antipasti/Contorni</a>
+            <a onclick="showSection('primi')">Primi Piatti</a>
+            <a onclick="showSection('secondi')">Secondi Piatti</a>
+            <a onclick="showSection('focaccerie')">Focaccerie</a>
+            <a onclick="showSection('dolci')">Dolci</a>
+            
+        </nav>
+    </header>
+
+    <div id="home" class="container" style="display: block;">
+        <img src="logo.png" alt="Logo Gastronomia" class="home-logo">
+        <h1>Benvenuti nella nostra Gastronomia!</h1> 
+        <p class="contact">
+            <strong>Contatti:</strong><br>
+            Email: <a href="storedelgustolecce@gmail.com" style="color: white;">storedelgustolecce@gmail.com</a><br>
+            Telefono: <a href="tel:+39 3293046465" style="color: white;">329-304-6465</a>, <a href="tel:+39 3388978213" style="color: white;">338-8978-213</a>
+            Indirizzo: <a href="Via Colonello Archimede Costadura,33,Lecce" style="color: white;">Via Colonello Archimede Costadura,33,Lecce</a><br>
+        </p>
+    </div>
+
+
+
+    <div id="primi" class="menu">
+        <div class="menu-item">
+            <img src="1.jpg">
+            <h3>Lasagna alla Bolognese</h3>
+            <p>Prezzo: €4</p>
+        </div>
+        <div class="menu-item">
+            <img src="2.jpg">
+            <h3>Lasagna Bianca ai Funghi</h3>
+            <p>Prezzo: €4</p>
+        </div>
+        <div class="menu-item">
+            <img src="3.jpg">
+            <h3>Lasagna Zucchine e Robiola</h3>
+            <p>Prezzo: €4</p>
+        </div>
+        <div class="menu-item">
+            <img src="4.jpg">
+            <h3>Lasagna Zucca e Speck</h3>
+            <p>Prezzo: €4</p>
+        </div>
+        <div class="menu-item">
+            <img src="5.jpg">
+            <h3>Lasagna vegetariana</h3>
+            <p>Prezzo: €4</p>
+        </div>
+        <div class="menu-item">
+            <img src="6.jpg">
+            <h3>lasagna zucchina|gamberetti|salmone</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="7.jpg">
+            <h3>Risotto alla Zucca</h3>
+            <p>Prezzo: €4</p>
+        </div>
+        <div class="menu-item">
+            <img src="8.jpg">
+            <h3>Risotto zucchine e rabiola</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="9.jpg">
+            <h3>Risotto ai funghi</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="10.jpg">
+            <h3>Risotto Asparagi e Gamberetti</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="11.jpg">
+            <h3>Risotto zucchina e Gamberetti</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="13.jpg">
+            <h3>Risotto ai frutti di mare</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="14.jpg">
+            <h3>Riso venere con salmone</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="244.jpg">
+            <h3>insalta di riso fredda</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="206.jpg">
+            <h3>riso al forno</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="226.jpg">
+            <h3>riso radicchio e pancetta</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="15.jpg">
+            <h3>riso|orzo|farro con verdurine</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="16.jpg">
+            <h3>gnocchi asparagi e gamberetti</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="17.jpg">
+            <h3>gnocchi gorgonzola|noci</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="18.jpg">
+            <h3>gnocchi ai 4 formaggi</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="19.jpg">
+            <h3>gnocchi zucchine e gamberetti</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="20.jpg">
+            <h3>gnocchi alla pescatora</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="21.jpg">
+            <h3>trofie spada e melanzane</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="22.jpg">
+            <h3>trofie ai frutti di mare</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="23.jpg">
+            <h3>trofie ai funghi</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="24.jpg">
+            <h3>trofie zucchine|cotto|philadelphia</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="25.jpg">
+            <h3>trofie zucchine e gamberetti</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="238.jpg">
+            <h3>gnocchetti sardi con spada e melanzane</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="26.jpg">
+            <h3>trofie zucca|porcini|speck</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="27.jpg">
+            <h3>trofie salsiccia e funghi</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="219.jpg">
+            <h3>paccheri alla crema di scampi </h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="220.jpg">
+            <h3>orechiette alla crudaiola</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="29.jpg">
+            <h3>orecchiete e maccheroni con melanzane fritte</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="200.jpg">
+            <h3>orecchiete al sugo</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="30.jpg">
+            <h3>trofie con pesto di melanzane e noci</h3>
+            <p>Prezzo: €5</p>
+        </div>
+        <div class="menu-item">
+            <img src="224.jpg">
+            <h3>ceci alla pignata</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="227.jpg">
+            <h3>lenticchie alla pignata</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="228.jpg">
+            <h3>fagioli alla pignata</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="232.jpg">
+            <h3>purea di fave con cicorine e crostini</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="233.jpg">
+            <h3>minestrone di verdure con/senza pasta</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="245.jpg">
+            <h3>pisellini primavera con toccheti di prosciutto</h3>
+            <p>Prezzo: €12</p>
+        </div>
+    </div>
+    
+    <div id="secondi" class="menu">
+        <div class="menu-item">
+            <img src="31.jpg">
+            <h3>Roastbeef</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="218.jpg">
+            <h3>roastbeef con crema di funghi </h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="32.jpg">
+            <h3>Polpettone farcito</h3>
+            <p>Prezzo: €12</p>
+        </div>
+        <div class="menu-item">
+            <img src="33.jpg">
+            <h3>Girelle di polpettone</h3>
+            <p>Prezzo: €15</p>
+        </div>
+        <div class="menu-item">
+            <img src="34.jpg">
+            <h3>Polpettoncini al bacon</h3>
+            <p>Prezzo: €8</p>
+        </div>
+        <div class="menu-item">
+            <img src="236.jpg">
+            <h3>involtini farciti di pollo fritti</h3>
+            <p>Prezzo: €8</p>
+        </div>
+        <div class="menu-item">
+            <img src="35.jpg">
+            <h3>polpette al sugo</h3>
+            <p>Prezzo: €12</p>
+        </div>
+        <div class="menu-item">
+            <img src="215.jpg">
+            <h3>polpette fritte</h3>
+            <p>Prezzo: €12</p>
+        </div>
+        <div class="menu-item">
+            <img src="213.jpg">
+            <h3>polpette al forno con paprika dolce e rosmarino</h3>
+            <p>Prezzo: €12</p>
+        </div>
+        <div class="menu-item">
+            <img src="36.jpg">
+            <h3>polpettoncini mortadella e emmental</h3>
+            <p>Prezzo: €12</p>
+        </div>
+        <div class="menu-item">
+            <img src="37.jpg">
+            <h3>polpettoncini ai capperi</h3>
+            <p>Prezzo: €12</p>
+        </div>
+        <div class="menu-item">
+            <img src="40.jpg">
+            <h3>schiacciatine alla griglia</h3>
+            <p>Prezzo: €12</p>
+        </div>
+        <div class="menu-item">
+            <img src="41.jpg">
+            <h3>schiacciatine fritte</h3>
+            <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="42.jpg">
+                <h3>tramezzini di carne con cotto e formaggio</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="301.jpg">
+                <h3>pizza di carne</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="44.jpg">
+                <h3>petti di pollo alla caprese</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="45.jpg">
+                <h3>petti di pollo gratinati</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="46.jpg">
+                <h3>petti di pollo fritti</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="43.jpg">
+                <h3>petti di pollo alla pizzaiola</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="48.jpg">
+                <h3>petti di pollo al latte con paprika</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="222.jpg">
+                <h3>pollo con le patate</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="223.jpg">
+                <h3>insalata di pollo bianca</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="242.jpg">
+                <h3>insalatona di pollo con pomodorini</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="49.jpg">
+                <h3>pezzetti di cavallo</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="50.jpg">
+                <h3>pezzetti di vitello  rossi con carote e sedano</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="51.jpg">
+                <h3>spezzatino di vitello con carciofi, carote e piselli</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="52.jpg">
+                <h3>spezzatino con le patate</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="54.jpg">
+                <h3>tacchino agli aromi</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="214.jpg">
+                <h3>patate al forno</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="55.jpg">
+                <h3>tacchino con patate al forno</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="56.jpg">
+                <h3>salsiccia in umido</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="230.jpg">
+                <h3>salsiccia con le patate</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="57.jpg">
+                <h3>salsiccia con funghi</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="59.jpg">
+                <h3>spada alla griglia</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="60.jpg">
+                <h3>spada gratinato</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="61.jpg">
+                <h3>spada alla siciliana</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="62.jpg">
+                <h3>spada alla palermitana</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="63.jpg">
+                <h3>salmone alla griglia</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="64.jpg">
+                <h3>salmone gratinato</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="65.jpg">
+                <h3>salmone alla mediterranea</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="66.jpg">
+                <h3>timballo di salmone con patate</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="67.jpg">
+                <h3>merluzzo gratinato</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="69.jpg">
+                <h3>baccalà alla gallipolina</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="70.jpg">
+                <h3>merluzzo con patate</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="71.jpg">
+                <h3>merluzzo con patate e carciofi</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="72.jpg">
+                <h3>taieddha</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="73.jpg">
+                <h3>seppia con piselli</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="74.jpg">
+                <h3>insalata di seppia/polipo e patate</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="75.jpg">
+                <h3>insalata di mare</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="76.jpg">
+                <h3>polpo alla pignata</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="77.jpg">
+                <h3>frittura di pesce</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="78.jpg">
+                <h3>orate al cartoccio con frutti di mare</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="79.jpg">
+                <h3>spigola al sale</h3>
+                <p>Prezzo: €12</p>
+            </div>
+            <div class="menu-item">
+                <img src="234.jpg">
+                <h3> zuppa di trippa con patate</h3>
+                <p>Prezzo: €12</p>
+            </div>
+        </div>
+        
+        <div id="antipasti/contorni" class="menu">
+            <div class="menu-item">
+                <img src="80.jpg">
+                <h3>omelette di zucchine</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="81.jpg">
+                <h3>omelette di spinaci</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="82.jpg">
+                <h3>omelette di carote</h3>
+                <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="83.jpg">
+            <h3>frittata di zucchine</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="84.jpg">
+            <h3>frittata di spinaci e ricotta</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="85.jpg">
+            <h3>pitta di verdure</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="86.jpg">
+            <h3>parmigiana di zucchine/melanzane</h3>
+            <p>Prezzo: €10</p>
+        </div>            
+        <div class="menu-item">
+            <img src="89.jpg">
+            <h3>cocule di patate rosse</h3>
+            <p>Prezzo: €10</p>
+        </div> 
+        <div class="menu-item">
+            <img src="90.jpg">
+            <h3>melanzane grigliate</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="92.jpg">
+            <h3>melanzane a funghetto</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="217.jpg">
+            <h3>melanzane ripiene</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="93.jpg">
+            <h3>involtini di melanzane freddi</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="94.jpg">
+            <h3>involtini di melanzane caldi rossi</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="95.jpg">
+            <h3>involtini di melanzane caldi bianchi</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="96.jpg">
+            <h3>carciofini alla leccese</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="97.jpg">
+            <h3>carciofini fritti</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="98.jpg">
+            <h3>funghi al forno</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="99.jpg">
+            <h3>funghi trifolati</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="240.jpg">
+            <h3>funghetti al pomodorino<h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="100.jpg">
+            <h3>peperoni grigliati</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="101.jpg">
+            <h3>peperoni in agrodolce</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="102.jpg">
+            <h3>peperoni ammollicati</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="103.jpg">
+            <h3>frigittielli fritti</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="104.jpg">
+            <h3>frigittielli alla leccese</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="202.jpg">
+            <h3>timballo di crepes con ricotta e spinaci </h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="201.jpg">
+            <h3>rughetta selvatica ripassata</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="203.jpg">
+            <h3>cipolline in agrodolce</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="205.jpg">
+            <h3>cicorie e finocchi stufate</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="241.jpg">
+            <h3>cicorie e finocchi lessi</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="207.jpg">
+            <h3>cicorine selvatiche</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="208.jpg">
+            <h3>stufato</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="209.jpg">
+            <h3>spinaci lessi</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="210.jpg">
+            <h3>zucchine e fagiolini lessi</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="231.jpg">
+            <h3>broccoli lessi</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="211.jpg">
+            <h3>fagiolini ripassati </h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="221.jpg">
+            <h3>carote rosse</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="225.jpg">
+            <h3>zucchine lesse</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="235.jpg">
+            <h3>rape 'nfucate</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="237.jpg">
+            <h3>bietole lesse</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="239.jpg">
+            <h3>finocchi  gin e noci</h3>
+            <p>Prezzo: €10</p>
+        </div>
+    </div>
+
+
+        <div id="focaccerie" class="menu">
+            <div class="menu-item">
+                <img src="106.jpg">
+                <h3>pizzi salentini</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="229.jpg">
+                <h3>pizzette e wurstel di sfoglia</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="107.jpg">
+                <h3>pucce con olive</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="108.jpg">
+                <h3>girelle varie</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="109.jpg">
+                <h3>cornetti di pasta</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="110.jpg">
+                <h3>paninetti farciti</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="111.jpg">
+                <h3>tramezzini</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="112.jpg">
+                <h3>voul a vent</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="113.jpg">
+                <h3>spiedini salati</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="114.jpg">
+                <h3>focaccia barese</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="204.jpg">
+                <h3>rotolo di focaccia con funghi,speck e emmental </h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="212.jpg">
+                <h3>rotolo di focaccia con rape </h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="115.jpg">
+                <h3>focaccia con cipolle</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="216.jpg">
+                <h3>focaccia  di patate con cipolle</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="300.jpg">
+                <h3>focaccia  di patate ,prosciutto e formaggio</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="117.jpg">
+                <h3>focaccia con le rape</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="118.jpg">
+                <h3>focaccia melanzane e emmental</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="119.jpg">
+                <h3>focaccia speck, funghi e emmental</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="120.jpg">
+                <h3>focaccia tramezzino</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="121.jpg">
+                <h3>quiche ricotta e spinaci</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="122.jpg">
+                <h3>quiche campagnola</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="123.jpg">
+                <h3>quiche patate e porchetta romana</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="124.jpg">
+                <h3>quiche zucchine e mortadella</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="125.jpg">
+                <h3>pizza rossa</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="126.jpg">
+                <h3>pizza ai 4 formaggi</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="127.jpg">
+                <h3>pizza prosciutto e funghi</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="128.jpg">
+                <h3>pizza bianca con bacon e formaggio</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="129.jpg">
+                <h3>pizza rossa vegetariana</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="130.jpg">
+                <h3>pizza margherita</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="131.jpg">
+                <h3>caprese</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="132.jpg">
+                <h3>pizza bianca al rosmarino</h3>
+                <p>Prezzo: €10</p>
+            </div>
+        </div>
+        
+        <div id="dolci" class="menu">
+            <div class="menu-item">
+                <img src="133.jpg">
+                <h3>tenerina al cioccolato</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="134.jpg">
+                <h3>crostatine alla nutella</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="135.jpg">
+                <h3>crostatine all'albicocca</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="136.jpg">
+                <h3>crostatine alla fragola</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="137.jpg">
+                <h3>crostatine ai frutti di bosco</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="138.jpg">
+                <h3>crostatine al limone</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="139.jpg">
+                <h3>crostatine alla crema</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="140.jpg">
+                <h3>torta alle mele</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="141.jpg">
+                <h3>torta alle carote</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="142.jpg">
+                <h3>torta con zucca, amaretti e mandorle</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="243.jpg">
+                <h3>torta  al profumo d'arancia</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="143.jpg">
+                <h3>nuvola nera</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="144.jpg">
+                <h3>ciambella al cioccolato</h3>
+                <p>Prezzo: €10</p>
+            </div>
+            <div class="menu-item">
+                <img src="145.jpg">
+                <h3>ciambella bigusto</h3>
+                
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="146.jpg">
+            <h3>muffin allo yoghurt</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="147.jpg">
+            <h3>muffine alle carote</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="148.jpg">
+            <h3>muffin al cioccolato</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="149.jpg">
+            <h3>rotolo al cioccolato con nutella</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="150.jpg">
+            <h3>mini crostatine alla frutta</h3>
+            <p>Prezzo: €10</p>
+        </div>
+        <div class="menu-item">
+            <img src="199.jpg">
+            <h3>sbriciolata con crema,nutella o marmellata</h3>
+            <p>Prezzo: €10</p>
+        </div>
+    </div>
+
+
+
+
+
+    <div id="componi-ordine" class="menu">
+        <h2>Componi il tuo ordine</h2>
+        <iframe id="ordine-frame" src="" style="width: 100%; height: 600px; border: none;"></iframe>
+    </div>
+    
+    
+    
+    
+    
+    
+
+    <script>
+        function caricaContenutoOrdine() {
+            let contenuto = document.getElementById('contenuto-ordine');
+            contenuto.innerHTML = "<p>Caricamento in corso...</p>";
+            fetch('ordine.html') 
+                .then(response => response.text()) 
+                .then(data => {
+                    contenuto.innerHTML = data;
+                    caricaScriptOrdine();
+                })
+                .catch(error => {
+                    console.error('Errore nel caricamento:', error);
+                    contenuto.innerHTML = "<p>Errore nel caricamento. Riprova più tardi.</p>";
+                });
+        }
+        
+        function caricaScriptOrdine() {
+            let script = document.createElement("script");
+            script.src = "ordine.js";
+            document.body.appendChild(script);
+        }
+        function caricaContenutoOrdine() {
+     document.getElementById('ordine-frame').src = "ordine.html";
+      }
+    </script>
+
+
+
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.container, .menu').forEach(section => {
+            section.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+        document.body.style.overflow = 'auto';
+        window.scrollTo(0, 0);
+    }
+
+    // Show 'home' section on page load
+    window.onload = function() {
+        showSection('home');
+    };
+
+    // Gestione del menu a tendina mobile
+    function navigateMobile() {
+        var selectedSection = document.getElementById('mobile-menu').value;
+        showSection(selectedSection);
+    }
+</script>
+        
+    <footer>
+        &copy; 2025 Gastronomia - Tutti i diritti riservati
+    </footer>
+</body>
+</html>
